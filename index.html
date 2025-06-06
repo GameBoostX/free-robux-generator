@@ -1,0 +1,398 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Free Robux Generator</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- CPA Locker Script -->
+  <script type="text/javascript" src="https://squaredownloads.com/script_include.php?id=543917"></script>
+
+  <style>
+    #fakeLog {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: #222;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      max-width: 320px;
+      z-index: 9999;
+    }
+    #fakeLog.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Free Robux Generator <span id="year"></span></h1>
+    <p>Enter your Roblox E-Mail and choose how many <strong>Robux</strong> you want to receive.</p>
+    
+    <input type="text" placeholder="Enter your Roblox E-Mail" id="username"/>
+    
+    <select id="robuxAmount">
+      <option value="400">400 Robux</option>
+      <option value="800">800 Robux</option>
+      <option value="1600">1,600 Robux</option>
+      <option value="10000" selected>10,000 Robux</option>
+    </select>
+    
+    <button onclick="startGenerating()">Generate Robux</button>
+    
+    <div id="log"></div>
+    
+    <div id="verify-section">
+      <p class="note">✅ Almost done! Complete human verification to unlock your Robux.</p>
+      <div id="locker-script"></div>
+    </div>
+    
+    <div class="verify-box" id="verifyBox" style="display: none;">
+      <p>⚠️ Human Verification Required</p>
+      <button class="verify-button" onclick="showLocker()">Verify Now</button>
+    </div>
+  </div>
+
+  <!-- Fake logs fixed at bottom left -->
+  <div id="fakeLog"></div>
+
+  <!-- Chatbox fixed bottom right -->
+  <div id="chatbox" aria-live="polite" aria-label="Live chat">
+    <div id="chatHeader">Live Chat</div>
+    <div id="chatMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+    <div id="chatInputArea">
+      <input id="chatInput" type="text" placeholder="Type your message..." aria-label="Chat input" autocomplete="off" />
+      <button id="chatSendBtn" aria-label="Send chat message">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Utility: get formatted timestamp [HH:MM:SS]
+    function getTimestamp() {
+      const now = new Date();
+      return now.toTimeString().split(' ')[0];
+    }
+
+    // --- Fake usernames (30 unique)
+    const fakeUsernames = [
+    "coolgamer123", "probuilder", "xXDarkLordXx", "robloxqueen99", "legend_yt",
+	"ninja_player", "ghost_master", "dragon_slayer", "pixel_artist", "speedrunner",
+	"arcade_king", "builder_pro", "skydiver07", "crazy_cat", "shadow_hunter",
+	"storm_rider", "pixel_pirate", "lava_beast", "night_owl", "ice_warrior",
+	"rocket_racer", "wildfire", "cyber_ninja", "mega_mind", "silent_assassin",
+	"turbo_gamer", "red_phoenix", "blue_tiger", "alpha_wolf", "phantom_ghost",
+	"toxic_blade", "stealth_sniper", "hyper_blitz", "iron_knight", "galaxy_wizard",
+	"vortex_blade", "magic_miner", "zombie_blaster", "bacon_boss", "thunder_strike",
+	"pixel_wizard", "lone_wanderer", "omega_fox", "epic_sword", "dark_panther",
+	"snow_fighter", "void_runner", "cosmic_flame", "king_cobra", "matrix_hacker",
+	"raven_claw", "ice_dragon", "chaos_fighter", "inferno_blade", "mad_miner",
+	"neo_shadow", "nuclear_storm", "giga_smasher", "light_sprinter", "aqua_ghost",
+	"omega_blade", "blitz_wizard", "toxic_runner", "storm_breaker", "mystic_knight",
+	"tech_wizard", "firestrike", "frostbite21", "ultra_dragon", "dino_destroyer",
+	"astro_brawler", "flame_tornado", "death_glitch", "pixel_survivor", "battle_bacon",
+	"savage_boy", "pink_glitterz", "snipe_god", "blue_mystic", "doom_gamer",
+	"magic_falcon", "sunset_blaze", "code_warrior", "wild_viking", "noobinator",
+	"dark_snake", "phantom_knight", "op_builder", "golden_blade", "ninja_punch",
+	"zero_fury", "lava_blaster", "glitch_master", "queen_bee", "soul_reaper",
+	"devil_miner", "stormy_sky", "swag_potato", "danger_muffin", "hacker_boy"
+    ];
+
+    const amounts = ["400", "800", "1600", "10000"];
+    let fakeLogIndex = 0;
+
+    const fakeLogBox = document.getElementById("fakeLog");
+
+    // Add beep sound helper
+    function playBeep() {
+      const context = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = context.createOscillator();
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(440, context.currentTime); // A4 note
+      oscillator.connect(context.destination);
+      oscillator.start();
+
+      setTimeout(() => {
+        oscillator.stop();
+        context.close();
+      }, 150);
+    }
+
+    // Updated showNextFakeLog with 3 types of messages cycling through 30 usernames each
+ function showNextFakeLog() {
+  const totalUsers = fakeUsernames.length;
+
+  // Pick a random user
+  const userIndex = Math.floor(Math.random() * totalUsers);
+  const user = fakeUsernames[userIndex];
+  const timestamp = getTimestamp();
+
+  // Randomly pick phase: 0=failed, 1=bot detected, 2=success
+  const phase = Math.floor(Math.random() * 3);
+
+  let message = "";
+  let color = "";
+
+  switch (phase) {
+    case 0:
+      message = `[${timestamp}] ${user} failed human verification ❌`;
+      color = "red";
+      break;
+    case 1:
+      message = `[${timestamp}] ${user} bot detected ⚠️`;
+      color = "orange";
+      break;
+    case 2:
+      const amount = amounts[Math.floor(Math.random() * amounts.length)];
+      message = `[${timestamp}] ${user} successfully generated ${amount} Robux ✅`;
+      color = "green";
+      break;
+  }
+
+  fakeLogBox.innerHTML = `<span style="color:${color}; font-weight: bold;">${message}</span>`;
+  fakeLogBox.classList.add('visible');
+
+  playBeep();  // <---- Call beep for every log here
+
+  // Show for 3 seconds then hide for 1 second before next, randomize delay a bit
+  const showDuration = 3000 + Math.random() * 2000; // 3-5 sec visible
+  const hideDuration = 1000 + Math.random() * 2000; // 1-3 sec hidden
+
+  setTimeout(() => {
+    fakeLogBox.classList.remove('visible');
+    setTimeout(() => {
+      showNextFakeLog();
+    }, hideDuration);
+  }, showDuration);
+}
+
+
+
+
+    // Start the cycle on page load
+    window.addEventListener("load", () => {
+      showNextFakeLog();
+      startFakeChat();
+	  
+	// set current year in the span
+    document.getElementById("year").textContent = new Date().getFullYear();
+    });
+
+    // --- Validation helper
+    function isValidEmail(email) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email);
+    }
+
+    // --- Start generating Robux steps & logs in main log box
+    function startGenerating() {
+      const username = document.getElementById("username").value.trim();
+      const robux = document.getElementById("robuxAmount").value;
+
+      if (username === "") {
+        alert("Please enter your Roblox E-Mail.");
+        return;
+      }
+
+      if (!isValidEmail(username)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      // Disable button
+      const generateButton = document.querySelector('button[onclick="startGenerating()"]');
+      generateButton.disabled = true;
+      generateButton.textContent = "Generating...";
+
+      const logBox = document.getElementById("log");
+      const verifySection = document.getElementById("verify-section");
+      const verifyBox = document.getElementById("verifyBox");
+
+      logBox.style.display = "block";
+      logBox.innerHTML = "";
+
+      const steps = [
+        `Connecting to Roblox servers`,
+        `Verifying username: ${username}`,
+        `Fetching available Robux packages`,
+        `Injecting ${robux} Robux`,
+        `Finalizing transaction`,
+        `Preparing human verification`
+      ];
+
+      let i = 0;
+      function showNextStep() {
+        if (i < steps.length) {
+          const loadingText = `> ${steps[i]}...`;
+          const stepLine = document.createElement("div");
+          const spinner = document.createElement("span");
+          spinner.className = "spinner";
+          spinner.textContent = "⠋";
+
+          stepLine.textContent = loadingText + " ";
+          stepLine.appendChild(spinner);
+          logBox.appendChild(stepLine);
+
+          logBox.scrollTop = logBox.scrollHeight;
+
+          setTimeout(() => {
+            spinner.remove();
+            stepLine.textContent = loadingText + " ✅";
+            i++;
+            setTimeout(showNextStep, 1000);
+          }, 1200);
+        } else {
+          const finalLine = document.createElement("div");
+          finalLine.innerHTML = `> ✅ ${robux} Robux generated successfully!<br>> Please complete verification to receive Robux.<br>`;
+          logBox.appendChild(finalLine);
+          verifySection.style.display = "block";
+          verifyBox.style.display = "block";
+          loadLockerScript();
+
+          // Re-enable button
+          generateButton.disabled = false;
+          generateButton.textContent = "Generate Robux";
+        }
+      }
+
+      showNextStep();
+    }
+
+    function showLocker() {
+      if (typeof call_locker === "function") {
+        call_locker();
+      } else {
+        alert("⚠️ Locker not loaded. Please check your script ID or refresh the page.");
+      }
+    }
+
+    function loadLockerScript() {
+      // Already included in <head>
+    }
+
+    // --- FAKE CHAT SETUP ---
+
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput = document.getElementById("chatInput");
+    const chatSendBtn = document.getElementById("chatSendBtn");
+
+    // 50+ fake chat messages sample
+    const fakeChatMessages = [
+      "Hey everyone! Anyone got Robux tips?",
+      "Just generated 10,000 Robux, crazy stuff!",
+      "How long does it take to get verified?",
+      "This tool looks legit to me!",
+      "Anyone know if this is safe?",
+      "I got my Robux last week, totally working.",
+      "Try not to spam the chat guys.",
+      "Waiting for the verification step...",
+      "Thanks for the info!",
+      "Best Robux generator I've seen.",
+      "Robux loading... please wait.",
+      "Does it work on mobile?",
+      "I just joined, hi all!",
+      "Thanks for the help, awesome community.",
+      "What if I get banned?",
+      "Sharing with my friends now!",
+      "Almost done with the verification.",
+      "Can't wait to buy cool skins!",
+      "This site looks professional.",
+      "Anyone tested the 1,600 Robux option?",
+      "I got stuck on the human verification :(",
+      "Make sure you complete the locker to get your Robux.",
+      "How many Robux can you generate at once?",
+      "Is this better than other generators?",
+      "I love the chat feature here!",
+      "So far, so good.",
+      "Where do I put my email again?",
+      "Can I use a fake email?",
+      "No, use your real Roblox email!",
+      "Just sent my request, fingers crossed!",
+      "Anyone else here from the US?",
+      "I'm from the UK, hello!",
+      "Let's keep the chat friendly.",
+      "How long does it usually take?",
+      "It took me 5 minutes last time.",
+      "Good luck everyone!",
+      "Are there any risks involved?",
+      "I've been using it safely for a week.",
+      "The chat makes it feel more legit.",
+      "What's the max Robux you can generate?",
+      "I got 10,000 in one go!",
+      "Don't forget to complete the verification.",
+      "Good vibes only in the chat!",
+      "I love this community.",
+      "Stay safe and have fun!",
+      "Got my Robux, thanks!",
+      "See you all later!",
+      "Keep it cool, folks.",
+      "Bye for now!",
+      "Logging off, good luck!",
+      "Catch you later!",
+    ];
+
+    let chatIndex = 0;
+
+    // Append one fake message every ~3 seconds until 50+ messages
+    function addFakeChatMessage() {
+      if (chatIndex < fakeChatMessages.length) {
+        const msg = fakeChatMessages[chatIndex];
+        const user = fakeUsernames[chatIndex % fakeUsernames.length];
+        const timestamp = getTimestamp();
+
+        const messageEl = document.createElement("div");
+        messageEl.innerHTML = `<strong>${user}:</strong> ${msg} <span style="font-size: 0.75rem; color: #060;">[${timestamp}]</span>`;
+        chatMessages.appendChild(messageEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        chatIndex++;
+        setTimeout(addFakeChatMessage, 3000 + Math.random() * 2000);
+      }
+    }
+
+    // Start fake chat messages
+    function startFakeChat() {
+      setTimeout(addFakeChatMessage, 2000);
+    }
+
+    // Handle user sending a message
+    function userSendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      const timestamp = getTimestamp();
+
+      const messageEl = document.createElement("div");
+      messageEl.innerHTML = `<strong>You:</strong> ${escapeHtml(text)} <span style="font-size: 0.75rem; color: #0f0;">[${timestamp}]</span>`;
+      chatMessages.appendChild(messageEl);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      chatInput.value = "";
+      chatInput.focus();
+    }
+
+    chatSendBtn.addEventListener("click", userSendMessage);
+
+    chatInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        userSendMessage();
+      }
+    });
+
+    // Escape HTML to avoid injection
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>
